@@ -1,0 +1,9 @@
+.folder-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.folder-content.open {
+  max-height: 500px; /* Nilai ini harus cukup besar untuk menampilkan seluruh isi subfolder */
+}

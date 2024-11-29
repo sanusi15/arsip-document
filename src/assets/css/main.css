@@ -1,0 +1,57 @@
+.resizable-table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  /* Membuat semua kolom memiliki lebar tetap (untuk mendukung ellipsis) */
+}
+
+.resizable-table th {
+  white-space: nowrap;
+  /* Sama seperti <td>, mencegah teks melipat */
+  overflow: hidden;
+  /* Menyembunyikan teks yang melampaui lebar */
+  text-overflow: ellipsis;
+}
+
+.resizable-table th,
+.resizable-table td {
+  position: relative;
+  /* Untuk mendukung elemen absolut seperti .resize-handle */
+  text-overflow: ellipsis;
+  /* Memotong teks dengan ellipsis */
+  vertical-align: middle;
+  /* Menjaga teks tetap sejajar secara vertikal */
+  cursor: default;
+}
+
+.resizable-table td {
+  white-space: nowrap;
+  /* Mencegah teks melipat ke baris berikutnya */
+  overflow: hidden;
+  /* Menyembunyikan teks yang melampaui lebar elemen */
+  text-overflow: ellipsis;
+  /* Menambahkan ellipsis (...) */
+  padding: 10px;
+}
+
+.resize-handle {
+  position: absolute;
+  /* Elemen absolut dalam <th> untuk mengontrol lebar */
+  top: 0;
+  right: 0;
+  width: 5px;
+  /* Lebar area untuk menyeret */
+  height: 100%;
+  /* Sepanjang tinggi header */
+  cursor: col-resize;
+  /* Ubah kursor menjadi col-resize */
+  background-color: transparent;
+  /* Transparan secara default */
+  z-index: 1;
+  /* Pastikan handle berada di atas elemen lainnya */
+}
+
+.resize-handle:hover {
+  background-color: #ddd;
+  /* Tambahkan efek visual saat hover */
+}
