@@ -4,12 +4,13 @@ import "../../assets/css/sidebar.css";
 import axios from "axios";
 
 const ListFolder = ({ onFolderClick }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [listFolder, setListFolder] = useState([]);
   const [openedFolders, setOpenedFolders] = useState([]);
   const [activeFolder, setActiveFolder] = useState(null);
   const fetchFolders = async (folderId = null) => {
     try {
-      const response = await axios.get("http://localhost:3000/folders", {
+      const response = await axios.get(apiUrl + "folders", {
         params: {
           folderId
         }

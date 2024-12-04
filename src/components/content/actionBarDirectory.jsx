@@ -4,10 +4,10 @@ import {
   MdOutlineDashboard,
   MdOutlineFilterList,
   MdUploadFile,
-  MdCreateNewFolder,
   MdOutlineCreateNewFolder
 } from "react-icons/md";
-const ActionBarDirectory = () => {
+const ActionBarDirectory = ({ path, folderId }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const uploadFile = async (e) => {
     try {
       const files = e.target.files;
@@ -16,15 +16,13 @@ const ActionBarDirectory = () => {
       for (const item of files) {
         formData.append("file", item);
       }
-      const response = await axios.post(
-        "http://localhost:3000/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+      formData.append("path", path);
+      formData.append("pathId", folderId);
+      const response = await axios.post(apiUrl + "upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
         }
-      );
+      });
       if (response.status === 200) {
         console.log(response.data.data);
       }

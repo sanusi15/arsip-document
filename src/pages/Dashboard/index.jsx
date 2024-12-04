@@ -9,42 +9,40 @@ import Propile from "../../components/sidebar/profile";
 import NavbarDirectory from "../../components/content/navbarDirectory";
 import ActionBarDirectory from "../../components/content/actionBarDirectory";
 const Dashboard = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [dataContent, setDataContent] = useState({});
   const [urlPathFoder, setUrlPathFoder] = useState("/");
+  const [idPathFolder, setIdPathFolder] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const fetchFolderContent = async (data, type) => {
     setLoading(true);
     try {
       if (type === "folderId") {
-        const response = await axios.get(
-          "http://localhost:3000/getContentsByFolderId",
-          {
-            params: {
-              folderId: data._id
-            }
+        const response = await axios.get(apiUrl + "getContentsByFolderId", {
+          params: {
+            folderId: data._id
           }
-        );
+        });
         setLoading(false);
         if (response.status === 200) {
           setDataContent(response.data.data);
           setUrlPathFoder(data.pathShow);
+          setIdPathFolder(data._id);
         } else {
           setDataContent();
         }
       } else {
-        const response = await axios.get(
-          "http://localhost:3000/getContentsByPath",
-          {
-            params: {
-              path: data
-            }
+        const response = await axios.get(apiUrl + "getContentsByPath", {
+          params: {
+            path: data
           }
-        );
+        });
         setLoading(false);
         if (response.status === 200) {
           setDataContent(response.data.data);
           setUrlPathFoder(data.path);
+          setIdPathFolder(data._id);
         } else {
           setDataContent();
         }
@@ -94,7 +92,7 @@ const Dashboard = () => {
           {/* end navbar directory */}
 
           {/* start action bar directory */}
-          <ActionBarDirectory />
+          <ActionBarDirectory path={urlPathFoder} folderId={idPathFolder} />
           {/* end action bar directory */}
 
           {/* start list directory */}
