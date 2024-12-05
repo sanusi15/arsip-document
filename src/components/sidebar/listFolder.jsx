@@ -38,29 +38,33 @@ const ListFolder = ({ onFolderClick }) => {
           className={`group w-full h-full flex items-center jutify-center gap-2 p-2 rounded-md cursor-pointer  active:bg-blue-500 ${
             activeFolder === folder._id ? "bg-blue-500" : "hover:bg-slate-200"
           }`}
+          onClick={() => {
+            onFolderClick(folder);
+            setActiveFolder(folder._id);
+          }}
         >
           {openedFolders.includes(folder._id) ? (
             <MdArrowDropDown
               className={`w-5 h-5 group-active:text-slate-50 ${
                 activeFolder === folder._id ? "text-slate-50" : "text-slate-500"
               }`}
-              onClick={() => toggleFolder(folder._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFolder(folder._id);
+              }}
             />
           ) : (
             <MdArrowRight
               className={`w-5 h-5 group-active:text-slate-50 ${
                 activeFolder === folder._id ? "text-slate-50" : "text-slate-500"
               }`}
-              onClick={() => toggleFolder(folder._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleFolder(folder._id);
+              }}
             />
           )}
-          <div
-            className="w-full h-full flex items-center justify-start gap-2 cursor-pointer"
-            onClick={() => {
-              onFolderClick(folder);
-              setActiveFolder(folder._id);
-            }}
-          >
+          <div className="w-full h-full flex items-center justify-start gap-2 cursor-pointer">
             <MdFolder
               className={`w-4 h-4 group-active:text-slate-50 ${
                 activeFolder === folder._id ? "text-slate-50" : "text-slate-500"
