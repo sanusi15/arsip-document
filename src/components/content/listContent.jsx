@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { MdFolder } from "react-icons/md";
 import {
   ImFileExcel,
@@ -6,7 +7,6 @@ import {
   ImFileEmpty,
   ImImage
 } from "react-icons/im";
-import { useEffect, useRef, useState } from "react";
 const ListContent = ({ items, onFolderClick }) => {
   const [columnWidths, setColumnWidths] = useState([400, 100, 100, 200]);
   const handleMouseDown = (index, e) => {
@@ -77,7 +77,7 @@ const ListContent = ({ items, onFolderClick }) => {
               item.type == "jpeg" ||
               item.type == "png"
             ) {
-              return <ImImage className="w-4 h-4 text-slate-500" />;
+              return <ImImage className="w-4 h-4 text-blue-500" />;
             } else {
               return <ImFileEmpty className="w-4 h-4 text-slate-500" />;
             }
