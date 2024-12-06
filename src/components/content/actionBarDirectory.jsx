@@ -13,7 +13,7 @@ const ActionBarDirectory = ({ folderId, onUpload }) => {
       <div className="flex items-center justify-between gap-2 px-2">
         {/* Start dropdown upload */}
         <div
-          className="flex items-center justify-between border border-slate-200 divide-x hover:cursor-pointer"
+          className="flex items-center justify-between border border-slate-200 divide-x hover:cursor-pointer hover:bg-slate-100"
           data-dropdown-toggle="dropdownUpload"
         >
           <div className="py-1 px-2">
@@ -52,7 +52,7 @@ const ActionBarDirectory = ({ folderId, onUpload }) => {
         {/* End dropdown upload */}
         {/* Start dropdown create */}
         <div
-          className="flex items-center justify-between border border-slate-200 divide-x cursor-pointer"
+          className="flex items-center justify-between border border-slate-200 divide-x cursor-pointer hover:bg-slate-100"
           data-dropdown-toggle="dropdownCreate"
         >
           <div className="py-1 px-2">
@@ -78,7 +78,7 @@ const ActionBarDirectory = ({ folderId, onUpload }) => {
           </ul>
         </div>
         {/* End dropdown create */}
-        <div className="flex items-center justify-between border border-slate-200 divide-x cursor-pointer">
+        <div className="flex items-center justify-between border border-slate-200 divide-x cursor-pointer hover:bg-slate-100">
           <div className="py-1 px-2">
             <p className="text-xs text-slate-500">Action</p>
           </div>
