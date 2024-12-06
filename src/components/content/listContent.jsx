@@ -72,6 +72,12 @@ const ListContent = ({ items, onFolderClick }) => {
               return <ImFilePdf className="w-4 h-4 text-red-500" />;
             } else if (item.type == "xlsx") {
               return <ImFileExcel className="w-4 h-4 text-green-500" />;
+            } else if (
+              item.type == "jpg" ||
+              item.type == "jpeg" ||
+              item.type == "png"
+            ) {
+              return <ImImage className="w-4 h-4 text-slate-500" />;
             } else {
               return <ImFileEmpty className="w-4 h-4 text-slate-500" />;
             }

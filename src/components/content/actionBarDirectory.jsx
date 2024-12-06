@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 import {
   MdArrowDropDown,
   MdOutlineDashboard,
@@ -6,34 +7,7 @@ import {
   MdUploadFile,
   MdOutlineCreateNewFolder
 } from "react-icons/md";
-const ActionBarDirectory = ({ path, folderId }) => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const uploadFile = async (e) => {
-    try {
-      const files = e.target.files;
-      if (!files.length) return;
-      const formData = new FormData();
-      for (const item of files) {
-        formData.append("file", item);
-      }
-      formData.append("path", path);
-      formData.append("pathId", folderId);
-      const response = await axios.post(apiUrl + "upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
-      if (response.status === 200) {
-        console.log(response.data.data);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.log(error.response.data);
-      } else {
-        console.log(error.message);
-      }
-    }
-  };
+const ActionBarDirectory = ({ folderId, onUpload }) => {
   return (
     <div className="w-full h-10 bg-stone-50 border-b border-slate-200 flex items-center justify-between gap-2 px-2">
       <div className="flex items-center justify-between gap-2 px-2">
@@ -55,19 +29,23 @@ const ActionBarDirectory = ({ path, folderId }) => {
         >
           <ul className="py-2" aria-labelledby="dropdownDefaultButton">
             <li>
-              <a
-                href="#"
-                className="flex items-center justify-start gap-2 px-4 py-1 text-xs text-slate-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.multiple = true;
-                  input.click();
-                  input.onchange = uploadFile;
-                }}
-              >
-                <MdUploadFile className="text-lg" /> Upload File
-              </a>
+              {folderId != null ? (
+                <a
+                  href="#"
+                  className="flex items-center justify-start gap-2 px-4 py-1 text-xs text-slate-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.multiple = true;
+                    input.click();
+                    input.onchange = onUpload;
+                  }}
+                >
+                  <MdUploadFile className="text-lg" /> Upload File
+                </a>
+              ) : (
+                <> </>
+              )}
             </li>
           </ul>
         </div>
