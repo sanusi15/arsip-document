@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   MdComputer,
   MdArrowForwardIos,
@@ -5,11 +6,17 @@ import {
   MdRefresh,
   MdSearch
 } from "react-icons/md";
-const NavbarDirectory = ({ url, onEnterPress, onUrlChange }) => {
-  const changeFormatUrl = (url) => {
-    const [firstPart, ...restParts] = url.split("/"); // Pisahkan bagian pertama
-    return [firstPart, ...restParts.join("/").replace(/\//g, " > ")].join("");
+const NavbarDirectory = ({ url = '', onEnterPress }) => {
+  const [inputValue, setInputValue] = useState(url);
+
+  useEffect(() => {
+    setInputValue(url);
+  }, [url]); 
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);  // Update nilai input ketika pengguna mengetik
   };
+
   return (
     <div className="w-full h-10 bg-stone-50 border-b border-slate-200 p-1 flex items-center justify-center gap-2">
       <div className="flex items-center justify-start gap-2 ">
@@ -23,13 +30,13 @@ const NavbarDirectory = ({ url, onEnterPress, onUrlChange }) => {
           <MdRefresh className="text-slate-500 text-sm " />
         </div>
       </div>
-      <div className="w-full h-full bg-white border border-slate-200 rounded-md flex items-center justify-start gap-2 p-2 divide-x">
+      <div className="w-full h-full bg-white border border-slate-200 rounded-md flex items-center justify-start gap-2 p-2 divide-x hover:bg-slate-50">
         <MdComputer className="w-4 h-4 text-slate-500" />
         <input
           type="text"
-          value={changeFormatUrl(url)}
-          onChange={(e) => onUrlChange(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && onEnterPress(e.target.value)}
+          value={inputValue} 
+          onChange={handleChange}
+          onKeyDown={(e) => e.key === "Enter" && onEnterPress(inputValue)}
           className="w-full h-full bg-transparent outline-none border-none font-normal text-xs text-slate-500 focus:outline-none focus:ring-0 placeholder:text-xs"
         />
       </div>

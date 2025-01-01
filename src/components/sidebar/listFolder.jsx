@@ -8,24 +8,31 @@ const ListFolder = ({ onFolderClick }) => {
   const [listFolder, setListFolder] = useState([]);
   const [openedFolders, setOpenedFolders] = useState([]);
   const [activeFolder, setActiveFolder] = useState(null);
-  const fetchFolders = async (folderId = null) => {
+
+  const fetchParentFolder = async () => {
     try {
-      const response = await axios.get(apiUrl + "folders", {
-        params: {
-          folderId
-        }
-      });
-      return response.data.data;
+      const result = await axios.get(apiUrl+'folder/getParent')
+      return result.data.data;
     } catch (error) {
-      return [];
+      console.log('Error in Fetch Parent Folder : \n'+error)
     }
-  };
+  }
+
+  const fetchSubFolder = async (parentPathId) => {
+    try {
+      const result = await axios.get(apiUrl+'folder/getSubById/'+parentPathId)
+      return result.data.data
+    } catch (error) {
+      console.log('Error in Fetch Sub Folder : \n'+error)
+    }
+  }
+;
 
   const toggleFolder = async (folderId) => {
     if (openedFolders.includes(folderId)) {
       setOpenedFolders((prev) => prev.filter((id) => id !== folderId));
     } else {
-      const childFolders = await fetchFolders(folderId);
+      const childFolders = await fetchSubFolder(folderId);
       setListFolder((prev) => ({ ...prev, [folderId]: childFolders }));
       setOpenedFolders((prev) => [...prev, folderId]);
     }
@@ -75,7 +82,7 @@ const ListFolder = ({ onFolderClick }) => {
                 activeFolder === folder._id ? "text-slate-50" : "text-slate-500"
               }`}
             >
-              {folder.folderName}
+              {folder.name}
             </p>
           </div>
         </div>
@@ -90,7 +97,7 @@ const ListFolder = ({ onFolderClick }) => {
 
   useEffect(() => {
     const loadFolder = async () => {
-      const rootFolders = await fetchFolders();
+      const rootFolders = await fetchParentFolder();
       setListFolder({ root: rootFolders });
     };
     loadFolder();

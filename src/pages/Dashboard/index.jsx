@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "../../assets/css/main.css";
-
-const apiUrl = import.meta.env.VITE_API_URL;
 
 import ListFolder from "../../components/sidebar/listFolder";
 import ListContent from "../../components/content/listContent";
@@ -11,58 +9,71 @@ import Propile from "../../components/sidebar/profile";
 import NavbarDirectory from "../../components/content/navbarDirectory";
 import ActionBarDirectory from "../../components/content/actionBarDirectory";
 import MyAlert from "../../components/myAlert";
+import MyModal from "../../components/myModal";
+
 
 const Dashboard = () => {
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const [dataContent, setDataContent] = useState({});
-  const [urlPathFoder, setUrlPathFoder] = useState("/");
+  const [urlPathFoder, setUrlPathFoder] = useState();
   const [idPathFolder, setIdPathFolder] = useState(null);
-  const [dataFolder, setDataFolder] = useState();
+  
+  
   const [loading, setLoading] = useState(false);
+
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+
+  const [showModal, setShowModal] = useState(false)
+  const [dataModal, setDataModal] = useState({})
+
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const fetchValueFolder = async (data, type) => {
-    setLoading(true);
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const [dataFile, setDataFile] = useState([])
+  const [dataFolder, setDataFolder] = useState([])
+
+  const fetchValueFolderById = async (folder) => {
+    setLoading(true)
     try {
-      if (type === "folderId") {
-        setDataFolder(data);
-        const response = await axios.get(apiUrl + "getContentsByFolderId", {
-          params: {
-            folderId: data._id
-          }
-        });
-        setLoading(false);
-        if (response.status === 200) {
-          setDataContent(response.data.data);
-          setUrlPathFoder(data.pathShow);
-          setIdPathFolder(data._id);
-        } else {
-          setDataContent();
-        }
-      } else {
-        const response = await axios.get(apiUrl + "getContentsByPath", {
-          params: {
-            path: data
-          }
-        });
-        setLoading(false);
-        if (response.status === 200) {
-          setDataContent(response.data.data);
-          setUrlPathFoder(data.path);
-          setIdPathFolder(data._id);
-        } else {
-          setDataContent();
-        }
+      const responseFolder = await axios.get(apiUrl+'folder/getSubById/'+folder._id)
+      if(responseFolder.status == 200){
+        setDataFolder(responseFolder.data.data)
+      }
+      const responseFile = await axios.get(apiUrl+'file/getByParentPath/'+folder._id)
+      if(responseFile.status == 200){
+        setDataFile(responseFile.data.data)
+      }
+      setUrlPathFoder(folder.routePath)
+    } catch (error) {
+      console.log('Error in fetch value folder : \n' + error)
+    } finally{
+      setLoading(false)
+    }
+  }
+
+  const fetchValueFolderByPath = async (urlPath) => {
+    try {
+      const response = await axios.post(apiUrl+'main/getBySlug', {
+        path: urlPath
+      })
+      if(response.data.success == true){
+        const dataResponse = response.data
+        setDataFolder(dataResponse.folders)
+        setDataFile(dataResponse.files)
+        setUrlPathFoder(dataResponse.route)
+      }else{
+        setDataModal({
+          status: 'danger',
+          title: 'Folder Not Found',
+          message: 'Please check again.'
+        })
+        setShowModal(true)
       }
     } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+      console.log('Error in fetch value folder by path : \n'+error)
     }
-  };
+  }
 
   const uploadFile = async (e) => {
     try {
@@ -103,9 +114,10 @@ const Dashboard = () => {
     }
   };
 
+
   return (
     <div className="h-screen p-5 m-0 bg-slate-200 select-none">
-      <div className="w-full h-full rounded-md overflow-hidden bg-blue-100 flex">
+      <div className="relative w-full h-full rounded-md overflow-hidden bg-blue-100 flex">
         {/* start sidebar */}
         <div className="w-2/12 h-full bg-stone-50 border-r-2 border-slate-200">
           {/* start icon 3 warna */}
@@ -124,7 +136,7 @@ const Dashboard = () => {
 
           {/* start list Folder */}
           <ListFolder
-            onFolderClick={(folder) => fetchValueFolder(folder, "folderId")}
+            onFolderClick={(folder) => fetchValueFolderById(folder, "folderId")}
           />
           {/* end list Folder */}
         </div>
@@ -136,7 +148,7 @@ const Dashboard = () => {
           <NavbarDirectory
             url={urlPathFoder}
             onUrlChange={(url) => setUrlPathFoder(url)}
-            onEnterPress={(url) => fetchValueFolder(url, "path")}
+            onEnterPress={(url) => fetchValueFolderByPath(url)}
           />
           {/* end navbar directory */}
 
@@ -150,10 +162,14 @@ const Dashboard = () => {
           {/* start list directory */}
           {loading && <LoadingBall />}
           <ListContent
-            items={dataContent}
-            onFolderClick={(folder) => fetchValueFolder(folder, "folderId")}
+            dataFolder={dataFolder}
+            dataFile={dataFile}
+            onFolderClick={(folder) => fetchValueFolderById(folder, "folderId")}
           />
+
           {showAlert && <MyAlert message={alertMessage} />}
+          {showModal && <MyModal data={dataModal} onCloseModal={ () => setShowModal(false)} />}
+          
           {showProgress === true ? (
             <div className="absolute bottom-0 right-0 w-full bg-gray-200 rounded-full dark:bg-gray-700 px-4">
               <div
