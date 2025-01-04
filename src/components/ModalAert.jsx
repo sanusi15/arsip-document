@@ -2,7 +2,7 @@ import React from 'react'
 import { AiOutlineClose } from "react-icons/ai";
 import { MdOutlineDoneAll, MdOutlineWarning, MdOutlineMedicalInformation } from "react-icons/md";
 
-const MyModal = ({data, onCloseModal}) => {
+const ModalAlert = ({data, onCloseModal}) => {
 
     const RenderIcon = () => {
         if(data.status == 'success'){
@@ -38,30 +38,30 @@ const MyModal = ({data, onCloseModal}) => {
         }
     }
 
-  return (
-    <div className='absolute top-0 left-0 w-full h-full bg-slate-400/20'>
-        <div className='flex justify-center items-center flex-col gap-0 h-full -translate-y-40'>
-            <div className='w-3/12 p-2 bg-zinc-50  rounded-t-md shadow-md'>
-                <div className='flex justify-end'>
-                    <button onClick={onCloseModal} className='p-1 bg-zinc-50 ring-1 ring-slate-200 rounded-md hover:bg-zinc-100'>
-                        <AiOutlineClose className='text-slate-500' />
-                    </button>
+    return (
+        <div className='absolute top-0 left-0 w-full h-full bg-slate-400/20'>
+            <div className='flex justify-center items-center flex-col gap-0 h-full -translate-y-40'>
+                <div className='w-3/12 p-2 bg-zinc-50  rounded-t-md shadow-md'>
+                    <div className='flex justify-end'>
+                        <button onClick={onCloseModal} className='p-1 bg-zinc-50 ring-1 ring-slate-200 rounded-md hover:bg-zinc-100'>
+                            <AiOutlineClose className='text-slate-500' />
+                        </button>
+                    </div>
+                    <RenderIcon />
+                    <div className='p-1 text-center mt-5'>
+                        <p className='text-sm text-slate-700'>{data.title}</p>
+                    </div>
+                    <div className='p-1 text-center mt-2'>
+                        <p className='text-sm text-slate-500'>{data.message}</p>
+                    </div>
                 </div>
-                <RenderIcon />
-                <div className='p-1 text-center mt-5'>
-                    <p className='text-sm text-slate-700'>{data.title}</p>
-                </div>
-                <div className='p-1 text-center mt-2'>
-                    <p className='text-sm text-slate-500'>{data.message}</p>
-                </div>
+                <div className='w-3/12 p-3 text-center bg-zinc-100 rounded-b-md'>
+                    <div className='flex justify-center gap-2'></div>
+                    <button onClick={onCloseModal} className='w-full py-2 px-4 rounded-sm bg-blue-500 text-slate-50 text-xs font-normal hover:bg-blue-600'>confirm</button>
+                </div>               
             </div>
-            <div className='w-3/12 p-3 text-center bg-zinc-100 rounded-b-md'>
-                <div className='flex justify-center gap-2'></div>
-                <button onClick={onCloseModal} className='w-full py-2 px-4 rounded-sm bg-blue-500 text-slate-50 text-xs font-normal hover:bg-blue-600'>confirm</button>
-            </div>               
         </div>
-    </div>
-  )
+    )
 }
 
-export default MyModal
+export default ModalAlert

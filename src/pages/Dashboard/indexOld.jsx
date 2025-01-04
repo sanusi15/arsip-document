@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { getParentFolder, setOpenFolder, setValueContentFile, setValueContentFolder } from "../../redux/slices/folderSlice";
-import { addToCart } from "../../redux/slices/cartSlice";
 import "../../assets/css/main.css";
 
 import ListFolder from "../../components/sidebar/listFolder";
@@ -16,20 +13,30 @@ import ModalAert from "../../components/ModalAert";
 
 
 const Dashboard = () => {
-  const dispatch = useDispatch()
-  const [urlPathFoder, setUrlPathFoder] = useState();  
+  const [urlPathFoder, setUrlPathFoder] = useState();
+  const [idPathFolder, setIdPathFolder] = useState(null);
+  
   const [loading, setLoading] = useState(false);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   const [showModal, setShowModal] = useState(false)
   const [dataModal, setDataModal] = useState({})
+
   const [showProgress, setShowProgress] = useState(false);
   const [progress, setProgress] = useState(0);
+
   const apiUrl = import.meta.env.VITE_API_URL;
-  const openFolder = useSelector((state) => state.folder.data.openFolder)
+
+  const [dataFile, setDataFile] = useState([])
+  const [dataFolder, setDataFolder] = useState([])
+  const [folderExist, setFolderExist] = useState(null)
 
   const fetchParentFolder = async () => {
     try {
       const result = await axios.get(apiUrl+'folder/getParent')
-      dispatch(getParentFolder(result.data.data))
+      return result.data.data;
     } catch (error) {
       console.log('Error in Fetch Parent Folder : \n'+error)
     }
@@ -37,15 +44,15 @@ const Dashboard = () => {
 
   const fetchValueFolderById = async (folder) => {
     setLoading(true)
-    dispatch(setOpenFolder(folder))
     try {
       const responseFolder = await axios.get(apiUrl+'folder/getSubById/'+folder._id)
       if(responseFolder.status == 200){
-        dispatch(setValueContentFolder(responseFolder.data.data))
+        setDataFolder(responseFolder.data.data)
       }
       const responseFile = await axios.get(apiUrl+'file/getByParentPath/'+folder._id)
       if(responseFile.status == 200){
-        dispatch(setValueContentFile(responseFile.data.data))
+        setDataFile(responseFile.data.data)
+        setFolderExist(folder)
       }
       setUrlPathFoder(folder.routePath)
     } catch (error) {
@@ -63,8 +70,8 @@ const Dashboard = () => {
       })
       if(response.data.success == true){
         const dataResponse = response.data
-        dispatch(setValueContentFolder(dataResponse.folders))
-        dispatch(setValueContentFile(dataResponse.files))
+        setDataFolder(dataResponse.folders)
+        setDataFile(dataResponse.files)
         setUrlPathFoder(dataResponse.route)
       }else{
         setDataModal({
@@ -84,19 +91,15 @@ const Dashboard = () => {
   const createFolder = async (data) => {
     setLoading(true)
     try {
-      const name = data
-      const routePath = openFolder._id ? openFolder.routePath + '/' + data : '/' + data
-      const slugPath = openFolder._id ? openFolder.slugPath + '/'+ data.toLowerCase().replaceAll(' ', '_') : '/' + data.toLowerCase().replaceAll(' ', '_') 
-      const parentPath = !openFolder._id ? null : openFolder._id
       const response = await axios.post(apiUrl+'folder/create', {
-        name,
-        parentPath,
-        routePath,
-        slugPath
+        name: 'Buana Laminar',
+        // parentPath: folderExist._id,
+        routePath: '/Buana Laminar',
+        slugPath: '/buana_laminar',
       })
       if(response.status == 200){
+        console.log(response.data)
         fetchParentFolder()
-        fetchValueFolderById(openFolder)
       }
     } catch (error) {
       console.log('Error in create folder : '+error)
@@ -105,46 +108,45 @@ const Dashboard = () => {
     }
   }
 
-  const uploadFile = async (e) => {
-    try {
-      const dataFolder = openFolder
-      const files = e.target.files;
-      if (!files.length) return;
-      const formData = new FormData();
-      for (const item of files) {
-        formData.append("files[]", item);
-      }
-      formData.append("routePath", dataFolder.routePath);
-      formData.append("id", openFolder._id);
-      setShowProgress(true);
-      const response = await axios.post(apiUrl + "main/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setProgress(percentCompleted);
-        }
-      });
-      if (response.status === 200) {
-        setShowProgress(false);
-        fetchValueFolderById(dataFolder)
-      }
-    } catch (error) {
-      setShowProgress(false);
-      if (error.response) {
-        console.log(error.response.data);
-      } else {
-        console.log(error.message);
-      }
-    }
-  };
+  // const uploadFile = async (e) => {
+  //   try {
+  //     const files = e.target.files;
+  //     if (!files.length) return;
+  //     const formData = new FormData();
+  //     for (const item of files) {
+  //       formData.append("file", item);
+  //     }
+  //     formData.append("path", urlPathFoder);
+  //     formData.append("pathId", idPathFolder);
+  //     setShowProgress(true);
+  //     const response = await axios.post(apiUrl + "upload", formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data"
+  //       },
+  //       onUploadProgress: (progressEvent) => {
+  //         const percentCompleted = Math.round(
+  //           (progressEvent.loaded * 100) / progressEvent.total
+  //         );
+  //         setProgress(percentCompleted);
+  //       }
+  //     });
+  //     if (response.status === 200) {
+  //       setShowProgress(false);
+  //       setAlertMessage(response.data.message);
+  //       setShowAlert(true);
+  //       fetchValueFolder(dataFolder, "folderId");
+  //       setShowAlert(false);
+  //     }
+  //   } catch (error) {
+  //     setShowProgress(false);
+  //     if (error.response) {
+  //       console.log(error.response.data);
+  //     } else {
+  //       console.log(error.message);
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchParentFolder();
-  },[])
 
   return (
     <div className="h-screen p-5 m-0 bg-slate-200 select-none">
@@ -167,6 +169,7 @@ const Dashboard = () => {
 
           {/* start list Folder */}
           <ListFolder
+            onFetchParentFolder={fetchParentFolder}
             onFolderClick={(folder) => fetchValueFolderById(folder, "folderId")}
           />
           {/* end list Folder */}
@@ -185,6 +188,7 @@ const Dashboard = () => {
 
           {/* start action bar directory */}
           <ActionBarDirectory
+            folderId={idPathFolder}
             onUpload={(e) => uploadFile(e)}
             onCreateFolder={createFolder}
           />
@@ -193,10 +197,14 @@ const Dashboard = () => {
           {/* start list directory */}
           {loading && <LoadingBall />}
           <ListContent
+            dataFolder={dataFolder}
+            dataFile={dataFile}
             onFolderClick={(folder) => fetchValueFolderById(folder, "folderId")}
           />
 
+          {showAlert && <MyAlert message={alertMessage} />}
           {showModal && <ModalAert data={dataModal} onCloseModal={ () => setShowModal(false)} />}
+          
           {showProgress === true ? (
             <div className="absolute bottom-0 right-0 w-full bg-gray-200 rounded-full dark:bg-gray-700 px-4">
               <div

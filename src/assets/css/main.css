@@ -15,7 +15,7 @@
 
 .resizable-table th,
 .resizable-table td {
-  position: relative;
+  /* position: relative; */
   /* Untuk mendukung elemen absolut seperti .resize-handle */
   text-overflow: ellipsis;
   /* Memotong teks dengan ellipsis */

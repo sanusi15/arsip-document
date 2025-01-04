@@ -1,14 +1,14 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+
 import { MdFolder } from "react-icons/md";
-import {
-  ImFileExcel,
-  ImFileWord,
-  ImFilePdf,
-  ImFileEmpty,
-  ImImage
-} from "react-icons/im";
-const ListContent = ({ dataFolder, dataFile, onFolderClick }) => {
+import {ImFileExcel, ImFileWord, ImFilePdf, ImFileEmpty, ImImage} from "react-icons/im";
+
+const ListContent = ({ onFolderClick }) => {
   const [columnWidths, setColumnWidths] = useState([400, 100, 100, 200]);
+  const dataFolder = useSelector((state) => state.folder.data.valueContentFolder)
+  const dataFile = useSelector((state) => state.folder.data.valueContentFile)
+ 
   const handleMouseDown = (index, e) => {
     const startX = e.pageX;
     const startWidth = columnWidths[index];
@@ -28,10 +28,9 @@ const ListContent = ({ dataFolder, dataFile, onFolderClick }) => {
     document.addEventListener("mouseup", handleMouseUp);
   };
 
-  const RenderFolder = (items) => {
-    const folders = items.items
-    if(folders.length > 0){
-      return folders.map((item) => (
+  const RenderFolder = () => {
+    if(dataFolder.length > 0){
+      return dataFolder.map((item) => (
         <tr
           key={item._id}
           className="select-none hover:bg-blue-200"
@@ -59,10 +58,9 @@ const ListContent = ({ dataFolder, dataFile, onFolderClick }) => {
     }
   };
 
-  const RenderFile = (items) => {
-    const files = items.items
-    if (files.length > 0) {
-      return files.map((item) => {
+  const RenderFile = () => {
+    if (dataFile.length > 0) {
+      return dataFile.map((item) => {
         const IconFile = () => {
           if (item.fileExt == "docx") {
             return <ImFileWord className="w-4 h-4 text-blue-500" />;
@@ -129,8 +127,8 @@ const ListContent = ({ dataFolder, dataFile, onFolderClick }) => {
             </tr>
           </thead>
           <tbody>
-            <RenderFolder items={dataFolder} />
-            <RenderFile items={dataFile} />
+            <RenderFolder/>
+            <RenderFile/>
           </tbody>
         </table>
       </div>

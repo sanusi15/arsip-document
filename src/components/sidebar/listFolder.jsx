@@ -1,22 +1,16 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdFolder, MdArrowRight, MdArrowDropDown } from "react-icons/md";
 import "../../assets/css/sidebar.css";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
 
 const ListFolder = ({ onFolderClick }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [listFolder, setListFolder] = useState([]);
   const [openedFolders, setOpenedFolders] = useState([]);
   const [activeFolder, setActiveFolder] = useState(null);
-
-  const fetchParentFolder = async () => {
-    try {
-      const result = await axios.get(apiUrl+'folder/getParent')
-      return result.data.data;
-    } catch (error) {
-      console.log('Error in Fetch Parent Folder : \n'+error)
-    }
-  }
+  const ListData = useSelector((state) => state.folder.data.parentFolder)
 
   const fetchSubFolder = async (parentPathId) => {
     try {
@@ -25,8 +19,7 @@ const ListFolder = ({ onFolderClick }) => {
     } catch (error) {
       console.log('Error in Fetch Sub Folder : \n'+error)
     }
-  }
-;
+  };
 
   const toggleFolder = async (folderId) => {
     if (openedFolders.includes(folderId)) {
@@ -95,26 +88,16 @@ const ListFolder = ({ onFolderClick }) => {
     ));
   };
 
-  useEffect(() => {
-    const loadFolder = async () => {
-      const rootFolders = await fetchParentFolder();
-      setListFolder({ root: rootFolders });
-    };
-    loadFolder();
-  }, []);
-
   return (
     <div className="w-full h-full bg-stone-50 pl-2 pt-2">
       <div className="w-full h-full overflow-x-scroll">
-        {listFolder.length === 0 ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <p className="font-semibold text-sm text-slate-500">
-              No folder found
-            </p>
-          </div>
-        ) : (
-          renderFolders(listFolder.root)
-        )}
+        {
+          ListData.length === 0 ? (
+            <p>Kosong</p>
+          ) : (
+            renderFolders(ListData)
+          ) 
+        }
       </div>
     </div>
   );

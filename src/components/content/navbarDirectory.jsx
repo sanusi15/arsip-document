@@ -14,7 +14,14 @@ const NavbarDirectory = ({ url = '', onEnterPress }) => {
   }, [url]); 
 
   const handleChange = (e) => {
-    setInputValue(e.target.value);  // Update nilai input ketika pengguna mengetik
+    const regex =  /^[a-zA-Z0-9 - /]*$/
+    if(regex.test(e.target.value)){
+      setInputValue(e.target.value);  // Update nilai input ketika pengguna mengetik
+      console.log('tidak bolehh')
+    }else{
+      const newValue = e.target.value.replace(/[^a-zA-Z0-9 - /]/g, "");
+      setInputValue(newValue);  // Update nilai input ketika pengguna mengetik
+    }
   };
 
   return (
