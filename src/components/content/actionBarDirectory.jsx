@@ -23,9 +23,18 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
     if(regex.test(inputValue)){
       setIsValidInput(true)
       onCreateFolder(inputValue)
-      setShowModalCreate(false)
+      handleCLoseModal()
     }else{
       setIsValidInput(false)
+    }
+  }
+
+  const onCheckInput = (e) => {
+    if(e.key == 'Escape'){
+      document.getElementById('validated-input').value = '' 
+      handleCLoseModal()
+    }else if(e.key == 'Enter'){
+      onSubmit()
     }
   }
 
@@ -57,8 +66,10 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
                   </div>
                   <div className="p-1 mt-2">
                        <input
+                        autoFocus={true}
                         id="validated-input"
                         type="text"
+                        onKeyUp={(e) => onCheckInput(e)}
                         className={`w-full h-8 p-2 outline-none border-none ring-1 ${isValidInput ? 'ring-blue-200' : 'ring-red-400'} bg-zinc-50 text-xs text-slate-500`} />
                   </div>
               </div>

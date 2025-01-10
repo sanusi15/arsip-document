@@ -14,13 +14,14 @@ const NavbarDirectory = ({ url = '', onEnterPress }) => {
   }, [url]); 
 
   const handleChange = (e) => {
-    const regex =  /^[a-zA-Z0-9 - /]*$/
+    const regex =  /^[a-zA-Z0-9 \-/]*$/
     if(regex.test(e.target.value)){
-      setInputValue(e.target.value);  // Update nilai input ketika pengguna mengetik
-      console.log('tidak bolehh')
+      setInputValue(e.target.value);   
+      console.log('boleh')
     }else{
-      const newValue = e.target.value.replace(/[^a-zA-Z0-9 - /]/g, "");
-      setInputValue(newValue);  // Update nilai input ketika pengguna mengetik
+      console.log('tidak boleh')
+      const newValue = e.target.value.replace(/[^a-zA-Z0-9 \-/]/g, "");
+      setInputValue(newValue);
     }
   };
 
