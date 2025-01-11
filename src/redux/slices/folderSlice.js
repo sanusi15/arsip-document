@@ -7,7 +7,8 @@ const folderSlice = createSlice({
             parentFolder: [],
             openFolder: {},
             valueContentFolder: [],
-            valueContentFile: []
+            valueContentFile: [],
+            contentActive: null
         }
     },
     reducers: {
@@ -39,9 +40,12 @@ const folderSlice = createSlice({
                     state.data.valueContentFile.push(val_one)
                 }
             })
+        },
+        setContentAcitve: (state, active) => {
+            state.data.contentActive= active.payload
         }
     }
 })
 
-export const {getParentFolder, setOpenFolder, setValueContentFolder, setValueContentFile} = folderSlice.actions
+export const {getParentFolder, setOpenFolder, setValueContentFolder, setValueContentFile, setContentAcitve} = folderSlice.actions
 export default folderSlice.reducer

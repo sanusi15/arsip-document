@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* start list content */
+.folder.active{
+    @apply bg-blue-200 ring-1 ring-blue-200
+}
+/* end list content */

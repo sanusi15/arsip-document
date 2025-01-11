@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getParentFolder, setOpenFolder, setValueContentFile, setValueContentFolder } from "../../redux/slices/folderSlice";
-import { addToCart } from "../../redux/slices/cartSlice";
 import "../../assets/css/main.css";
 
 import ListFolder from "../../components/sidebar/listFolder";
@@ -11,7 +10,6 @@ import LoadingBall from "../../components/LoadingBall";
 import Propile from "../../components/sidebar/profile";
 import NavbarDirectory from "../../components/content/navbarDirectory";
 import ActionBarDirectory from "../../components/content/actionBarDirectory";
-import MyAlert from "../../components/myAlert";
 import ModalAert from "../../components/ModalAert";
 
 
@@ -193,7 +191,7 @@ const Dashboard = () => {
           {/* start list directory */}
           {loading && <LoadingBall />}
           <ListContent
-            onFolderClick={(folder) => fetchValueFolderById(folder, "folderId")}
+            onFolderDoubleClick={(folder) => fetchValueFolderById(folder, "folderId")}
           />
 
           {showModal && <ModalAert data={dataModal} onCloseModal={ () => setShowModal(false)} />}

@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import { MdFolder } from "react-icons/md";
 import {ImFileExcel, ImFileWord, ImFilePdf, ImFileEmpty, ImImage} from "react-icons/im";
+import { setContentAcitve } from "../../redux/slices/folderSlice";
 
-const ListContent = ({ onFolderClick }) => {
+const ListContent = ({ onFolderDoubleClick }) => {
+  const dispatch = useDispatch()
   const [columnWidths, setColumnWidths] = useState([400, 100, 100, 200]);
   const dataFolder = useSelector((state) => state.folder.data.valueContentFolder)
   const dataFile = useSelector((state) => state.folder.data.valueContentFile)
+  const activeContent = useSelector((state) => state.folder.data.contentActive)
  
   const handleMouseDown = (index, e) => {
     const startX = e.pageX;
@@ -33,8 +35,9 @@ const ListContent = ({ onFolderClick }) => {
       return dataFolder.map((item) => (
         <tr
           key={item._id}
-          className="select-none hover:bg-blue-200"
-          onDoubleClick={() => onFolderClick(item)}
+          className={`select-none folder ${activeContent === item._id ? 'active' : 'hover:bg-blue-100'}`}
+          onClick={() => dispatch(setContentAcitve(item._id))}
+          onDoubleClick={() => onFolderDoubleClick(item)}
         >
           <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-start px-2 py-1">
             <div className="w-full h-full flex items-center justify-start gap-2">
