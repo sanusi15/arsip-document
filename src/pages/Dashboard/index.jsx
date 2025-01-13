@@ -112,7 +112,7 @@ const Dashboard = () => {
       for (const item of files) {
         formData.append("files[]", item);
       }
-      formData.append("routePath", dataFolder.routePath);
+      // formData.append("routePath", dataFolder.routePath);
       formData.append("id", openFolder._id);
       setShowProgress(true);
       const response = await axios.post(apiUrl + "main/upload", formData, {
