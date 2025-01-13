@@ -110,39 +110,23 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
           id="dropdownUpload"
         >
           <ul className="border border-gray-200 divide-y divide-gray-200">
-            <li className="px-2 py-1.5 flex justify-start items-center gap-4 hover:cursor-pointer" 
+            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100"
               onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.multiple = true;
-                  input.click();
-                  input.onchange = onUpload;
-                }}
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.multiple = true;
+                    input.click();
+                    input.onchange = onUpload;
+                  }}
             >
               <div className="w-5 flex justify-center">
-                <FiUploadCloud className="text-sm text-slate-700" />
+                <FiUploadCloud className="text-xs text-slate-700" />
               </div>
-              <div className="">
-                <p className="text-xs text-slate-500">File</p>
+              <div className="flex justify-start border-l-2 pl-2">
+                <p className="text-xs text-slate-500">Upload File</p>
               </div>
             </li>
           </ul>
-          {/* <ul className="py-2" aria-labelledby="dropdownDefaultButton">
-            <li>
-              <button
-                className="flex items-center justify-start gap-2 px-4 py-1 text-xs text-slate-500 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.multiple = true;
-                  input.click();
-                  input.onchange = onUpload;
-                }}
-              >
-                <MdUploadFile className="text-lg" /> Upload File
-              </button>
-            </li>
-          </ul> */}
         </div>
         {/* End dropdown upload */}
         {/* Start dropdown create */}
@@ -171,35 +155,35 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
           id="dropdownAction"
         >
           <ul className="border border-gray-200 divide-y divide-gray-200">
-            <li className="px-2 py-1.5 flex justify-start items-center gap-4">
+            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
               <div className="w-5 flex justify-center">
                 <TfiCut className="text-xs text-slate-700" />
               </div>
-              <div className="">
+              <div className="flex justify-start border-l-2 pl-2">
                 <p className="text-xs text-slate-500">Cut</p>
               </div>
             </li>
-            <li className="px-2 py-1.5 flex justify-start items-center gap-4">
+            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
               <div className="w-5 flex justify-center">
                 <FaRegCopy className="text-xs text-slate-700" />
               </div>
-              <div className="flex justify-start">
+              <div className="flex justify-start border-l-2 pl-2">
                 <p className="text-xs text-start text-slate-500">Copy</p>
               </div>
             </li>
-            <li className="px-2 py-1.5 flex justify-start items-center gap-4">
+            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
               <div className="w-5 flex justify-center">
                 <CgRename className="text-sm text-slate-700" />
               </div>
-              <div className="flex justify-start">
+              <div className="flex justify-start border-l-2 pl-2">
                 <p className="text-xs text-start text-slate-500">Rename</p>
               </div>
             </li>
-            <li className="px-2 py-1.5 flex justify-start items-center gap-4">
+            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
               <div className="w-5 flex justify-center">
                 <AiOutlineDelete className="text-sm text-slate-700" />
               </div>
-              <div className="flex justify-start">
+              <div className="flex justify-start border-l-2 pl-2">
                 <p className="text-xs text-start text-slate-500">Delete</p>
               </div>
             </li>
