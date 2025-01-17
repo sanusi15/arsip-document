@@ -8,7 +8,8 @@ const folderSlice = createSlice({
             openFolder: {},
             valueContentFolder: [],
             valueContentFile: [],
-            contentActive: null
+            contentActive: null,
+            contentCutOrCopy: {},
         }
     },
     reducers: {
@@ -41,11 +42,18 @@ const folderSlice = createSlice({
                 }
             })
         },
-        setContentAcitve: (state, active) => {
-            state.data.contentActive= active.payload
+        setContentAcitve: (state, action) => {
+            state.data.contentActive= action.payload
+        },
+        setCutOrCopyContent: (state, action) => {
+            const {status, type, contentId, folderTarget} = action.payload
+            state.data.contentCutOrCopy.status = status
+            state.data.contentCutOrCopy.type = type
+            state.data.contentCutOrCopy.contentId = contentId
+            state.data.contentCutOrCopy.folderTarget = folderTarget
         }
     }
 })
 
-export const {getParentFolder, setOpenFolder, setValueContentFolder, setValueContentFile, setContentAcitve} = folderSlice.actions
+export const {getParentFolder, setOpenFolder, setValueContentFolder, setValueContentFile, setContentAcitve, setCutOrCopyContent} = folderSlice.actions
 export default folderSlice.reducer

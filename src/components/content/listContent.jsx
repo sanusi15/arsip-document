@@ -10,6 +10,7 @@ const ListContent = ({ onFolderDoubleClick }) => {
   const dataFolder = useSelector((state) => state.folder.data.valueContentFolder)
   const dataFile = useSelector((state) => state.folder.data.valueContentFile)
   const activeContent = useSelector((state) => state.folder.data.contentActive)
+  const contentOnCutOrCopy = useSelector((state) => state.folder.data.contentCutOrCopy)
  
   const handleMouseDown = (index, e) => {
     const startX = e.pageX;
@@ -35,25 +36,29 @@ const ListContent = ({ onFolderDoubleClick }) => {
       return dataFolder.map((item) => (
         <tr
           key={item._id}
-          className={`select-none folder ${activeContent === item._id ? 'active' : 'hover:bg-blue-100'}`}
+          className={`select-none folder ${activeContent === item._id ? 'active' : 'hover:bg-blue-100'} ${contentOnCutOrCopy.contentId == item._id ? 'bg-zinc-100' : ''}`}
           onClick={() => dispatch(setContentAcitve(item._id))}
-          onDoubleClick={() => onFolderDoubleClick(item)}
+          onDoubleClick={() => {
+            if(contentOnCutOrCopy.contentId != item._id){
+              onFolderDoubleClick(item)
+            }
+          }}
         >
           <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-start px-2 py-1">
             <div className="w-full h-full flex items-center justify-start gap-2">
               <MdFolder className="w-4 h-4 text-yellow-300" />
-              <p className="font-normal text-xs text-slate-500">
+              <p className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'}`}>
                 {item.name}
               </p>
             </div>
           </td>
-          <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-end px-2 py-1">
+          <td className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'} border-b border-slate-200 text-end px-2 py-1`}>
             {/* {item.property.size} Kb */}
           </td>
-          <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-start px-2 py-1">
+          <td className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'} border-b border-slate-200 text-start px-2 py-1`}>
             {item.typeExt}
           </td>
-          <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-end px-2 py-1">
+          <td className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'} border-b border-slate-200 text-end px-2 py-1`}>
             {item.created_at}
           </td>
         </tr>

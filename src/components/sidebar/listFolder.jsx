@@ -11,6 +11,7 @@ const ListFolder = ({ onFolderClick }) => {
   const [openedFolders, setOpenedFolders] = useState([]);
   const [activeFolder, setActiveFolder] = useState(null);
   const ListData = useSelector((state) => state.folder.data.parentFolder)
+  const contentOnCutOrCopy = useSelector((state) => state.folder.data.contentCutOrCopy)
 
   const fetchSubFolder = async (parentPathId) => {
     try {
@@ -22,12 +23,14 @@ const ListFolder = ({ onFolderClick }) => {
   };
 
   const toggleFolder = async (folderId) => {
-    if (openedFolders.includes(folderId)) {
-      setOpenedFolders((prev) => prev.filter((id) => id !== folderId));
-    } else {
-      const childFolders = await fetchSubFolder(folderId);
-      setListFolder((prev) => ({ ...prev, [folderId]: childFolders }));
-      setOpenedFolders((prev) => [...prev, folderId]);
+    if(contentOnCutOrCopy.contentId != folderId){
+      if (openedFolders.includes(folderId)) {
+        setOpenedFolders((prev) => prev.filter((id) => id !== folderId));
+      } else {
+        const childFolders = await fetchSubFolder(folderId);
+        setListFolder((prev) => ({ ...prev, [folderId]: childFolders }));
+        setOpenedFolders((prev) => [...prev, folderId]);
+      }
     }
   };
 
@@ -39,8 +42,10 @@ const ListFolder = ({ onFolderClick }) => {
             activeFolder === folder._id ? "bg-blue-500" : "hover:bg-slate-200"
           }`}
           onClick={() => {
-            onFolderClick(folder);
-            setActiveFolder(folder._id);
+            if(contentOnCutOrCopy.contentId != folder._id){
+              onFolderClick(folder);
+              setActiveFolder(folder._id);
+            }
           }}
         >
           {openedFolders.includes(folder._id) ? (

@@ -1,22 +1,28 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setCutOrCopyContent } from "../../redux/slices/folderSlice";
+import axios from "axios";
 import {
   MdArrowDropDown,
-  MdOutlineCreateNewFolder,
   MdOutlineDashboard,
   MdOutlineFilterList,
-  MdUploadFile,
 } from "react-icons/md";
 import { BsFillFolderFill } from "react-icons/bs";
 import { AiOutlineClose, AiOutlineDelete } from "react-icons/ai";
 import { TfiCut } from "react-icons/tfi";
 import { FaRegCopy } from "react-icons/fa6";
 import { CgRename } from "react-icons/cg";
-import { BiRename, BiSolidRename } from "react-icons/bi";
 import { FiUploadCloud } from "react-icons/fi";
 
-const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
+
+const ActionBarDirectory = ({ onUpload, onCreateFolder, onPasteContent }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const dispatch = useDispatch()
   const [showModalCreate, setShowModalCreate] = useState(false)
   const [isValidInput, setIsValidInput] = useState(true)
+  const [isDropdownVisibile, setIsDropdownVisible] = useState(true)
+  const contentActive = useSelector((state) => state.folder.data.contentActive)
+  const contentOnCutOrCopy = useSelector((state) => state.folder.data.contentCutOrCopy)
 
   const handleCLoseModal = () =>{
     setShowModalCreate(false)
@@ -142,7 +148,7 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
         </div>
         {/* End dropdown create */}
         {/* Start dropdown action */}
-        <div className="flex items-center justify-between border border-slate-200 divide-x cursor-pointer hover:bg-slate-100" data-dropdown-toggle="dropdownAction">
+        <div className={`flex items-center justify-between border border-slate-200 divide-x ${contentActive != null ? 'cursor-pointer hover:bg-slate-100' : 'bg-zinc-200'}`} data-dropdown-toggle="dropdownAction">
           <div className="py-1 px-2">
             <p className="text-xs text-slate-500">Action</p>
           </div>
@@ -154,40 +160,56 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder }) => {
           className="z-10 hidden bg-white shadow w-max dark:bg-gray-700"
           id="dropdownAction"
         >
-          <ul className="border border-gray-200 divide-y divide-gray-200">
-            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
-              <div className="w-5 flex justify-center">
-                <TfiCut className="text-xs text-slate-700" />
-              </div>
-              <div className="flex justify-start border-l-2 pl-2">
-                <p className="text-xs text-slate-500">Cut</p>
-              </div>
-            </li>
-            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
-              <div className="w-5 flex justify-center">
-                <FaRegCopy className="text-xs text-slate-700" />
-              </div>
-              <div className="flex justify-start border-l-2 pl-2">
-                <p className="text-xs text-start text-slate-500">Copy</p>
-              </div>
-            </li>
-            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
-              <div className="w-5 flex justify-center">
-                <CgRename className="text-sm text-slate-700" />
-              </div>
-              <div className="flex justify-start border-l-2 pl-2">
-                <p className="text-xs text-start text-slate-500">Rename</p>
-              </div>
-            </li>
-            <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
-              <div className="w-5 flex justify-center">
-                <AiOutlineDelete className="text-sm text-slate-700" />
-              </div>
-              <div className="flex justify-start border-l-2 pl-2">
-                <p className="text-xs text-start text-slate-500">Delete</p>
-              </div>
-            </li>
-          </ul>
+          {
+            contentActive != null && (
+              <ul className="border border-gray-200 divide-y divide-gray-200">
+                <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100"
+                  onClick={() => dispatch(setCutOrCopyContent({status: true, type: 'cut', contentId: contentActive, folderTarget: null}))}
+                >
+                  <div className="w-5 flex justify-center">
+                    <TfiCut className="text-xs text-slate-700" />
+                  </div>
+                  <div className="flex justify-start border-l-2 pl-2">
+                    <p className="text-xs text-slate-500">Cut</p>
+                  </div>
+                </li>
+                <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
+                  <div className="w-5 flex justify-center">
+                    <FaRegCopy className="text-xs text-slate-700" />
+                  </div>
+                  <div className="flex justify-start border-l-2 pl-2">
+                    <p className="text-xs text-start text-slate-500">Copy</p>
+                  </div>
+                </li>
+                <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100"
+                  onClick={() => onPasteContent()}
+                >
+                  <div className="w-5 flex justify-center">
+                    <FaRegCopy className="text-xs text-slate-700" />
+                  </div>
+                  <div className="flex justify-start border-l-2 pl-2">
+                    <p className="text-xs text-start text-slate-500">Paste</p>
+                  </div>
+                </li>
+                <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
+                  <div className="w-5 flex justify-center">
+                    <CgRename className="text-sm text-slate-700" />
+                  </div>
+                  <div className="flex justify-start border-l-2 pl-2">
+                    <p className="text-xs text-start text-slate-500">Rename</p>
+                  </div>
+                </li>
+                <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100">
+                  <div className="w-5 flex justify-center">
+                    <AiOutlineDelete className="text-sm text-slate-700" />
+                  </div>
+                  <div className="flex justify-start border-l-2 pl-2">
+                    <p className="text-xs text-start text-slate-500">Delete</p>
+                  </div>
+                </li>
+              </ul>
+            ) 
+          }
         </div>
         {/* End dropdown action  */}
       </div>

@@ -10,7 +10,7 @@ const store = configureStore({
 // console.log('oncreate store : ', store.getState())
 
 store.subscribe(() => {
-    // console.log('store changed : ', store.getState())
+    console.log('store changed : ', store.getState())
 })
 
 export default store

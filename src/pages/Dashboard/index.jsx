@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { getParentFolder, setOpenFolder, setValueContentFile, setValueContentFolder } from "../../redux/slices/folderSlice";
+import { getParentFolder, setContentAcitve, setCutOrCopyContent, setOpenFolder, setValueContentFile, setValueContentFolder } from "../../redux/slices/folderSlice";
 import "../../assets/css/main.css";
 
 import ListFolder from "../../components/sidebar/listFolder";
@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [progress, setProgress] = useState(0);
   const apiUrl = import.meta.env.VITE_API_URL;
   const openFolder = useSelector((state) => state.folder.data.openFolder)
+  const contentActive = useSelector((state) => state.folder.data.contentActive)
+  const contentOnCutOrCopy = useSelector((state) => state.folder.data.contentCutOrCopy)
 
   const fetchParentFolder = async () => {
     try {
@@ -36,6 +38,7 @@ const Dashboard = () => {
   const fetchValueFolderById = async (folder) => {
     setLoading(true)
     dispatch(setOpenFolder(folder))
+    dispatch(setContentAcitve(folder._id))
     try {
       const responseFolder = await axios.get(apiUrl+'folder/getSubById/'+folder._id)
       if(responseFolder.status == 200){
@@ -139,6 +142,30 @@ const Dashboard = () => {
     }
   };
 
+  const pasteContent = async () => {
+    try {
+      const contentId = contentOnCutOrCopy.contentId
+      const newParentFolderId = contentActive
+      setShowProgress(true);
+      const response = await axios.put(apiUrl+'folder/cutFolder/'+contentId, {newParentFolderId}, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setProgress(percentCompleted);
+        }
+      })
+      if(response.status == 200){
+        setShowProgress(false);
+        dispatch(setCutOrCopyContent({}))
+        fetchParentFolder()
+        fetchValueFolderById(openFolder)
+      }
+    } catch (error) {
+      console.log('Error In Paste Content API ', error)
+    }
+  }
+
   useEffect(() => {
     fetchParentFolder();
   },[])
@@ -184,6 +211,7 @@ const Dashboard = () => {
           <ActionBarDirectory
             onUpload={(e) => uploadFile(e)}
             onCreateFolder={createFolder}
+            onPasteContent={pasteContent}
           />
           {/* end action bar directory */}
 
