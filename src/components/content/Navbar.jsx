@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MdComputer,
   MdArrowForwardIos,
@@ -6,7 +6,7 @@ import {
   MdRefresh,
   MdSearch
 } from "react-icons/md";
-const NavbarDirectory = ({ url = '', onEnterPress }) => {
+const Navbar = ({ url = '', onEnterPress }) => {
   const [inputValue, setInputValue] = useState(url);
 
   useEffect(() => {
@@ -60,4 +60,4 @@ const NavbarDirectory = ({ url = '', onEnterPress }) => {
   );
 };
 
-export default NavbarDirectory;
+export default Navbar;

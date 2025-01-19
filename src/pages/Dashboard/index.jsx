@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { getParentFolder, setContentAcitve, setCutOrCopyContent, setOpenFolder, setValueContentFile, setValueContentFolder } from "../../redux/slices/folderSlice";
 import "../../assets/css/main.css";
 
-import ListFolder from "../../components/sidebar/listFolder";
-import ListContent from "../../components/content/listContent";
+import ListFolder from "../../components/sidebar/ListFolder";
+import Propile from "../../components/sidebar/Profile";
+import ListContent from "../../components/content/ListContent";
+import Navbar from "../../components/content/Navbar";
+import ActionBar from "../../components/content/ActionBar";
 import LoadingBall from "../../components/LoadingBall";
-import Propile from "../../components/sidebar/profile";
-import NavbarDirectory from "../../components/content/navbarDirectory";
-import ActionBarDirectory from "../../components/content/actionBarDirectory";
 import ModalAert from "../../components/ModalAert";
 
 
@@ -205,7 +205,7 @@ const Dashboard = () => {
         {/* start content */}
         <div className="w-10/12 h-full bg-stone-50">
           {/* start navbar directory */}
-          <NavbarDirectory
+          <Navbar
             url={urlPathFoder}
             onUrlChange={(url) => setUrlPathFoder(url)}
             onEnterPress={(url) => fetchValueFolderByPath(url)}
@@ -213,7 +213,7 @@ const Dashboard = () => {
           {/* end navbar directory */}
 
           {/* start action bar directory */}
-          <ActionBarDirectory
+          <ActionBar
             onUpload={(e) => uploadFile(e)}
             onCreateFolder={createFolder}
             onPasteContent={pasteContent}

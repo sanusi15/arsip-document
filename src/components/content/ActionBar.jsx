@@ -15,7 +15,7 @@ import { CgRename } from "react-icons/cg";
 import { FiUploadCloud } from "react-icons/fi";
 
 
-const ActionBarDirectory = ({ onUpload, onCreateFolder, onPasteContent }) => {
+const ActionBar = ({ onUpload, onCreateFolder, onPasteContent }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
   const dispatch = useDispatch()
   const [showModalCreate, setShowModalCreate] = useState(false)
@@ -236,4 +236,4 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder, onPasteContent }) => {
   );
 };
 
-export default ActionBarDirectory;
+export default ActionBar;
