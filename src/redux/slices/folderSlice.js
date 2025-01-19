@@ -8,7 +8,7 @@ const folderSlice = createSlice({
             openFolder: {},
             valueContentFolder: [],
             valueContentFile: [],
-            contentActive: null,
+            contentActive: {},
             contentCutOrCopy: {},
         }
     },
@@ -43,14 +43,16 @@ const folderSlice = createSlice({
             })
         },
         setContentAcitve: (state, action) => {
-            state.data.contentActive= action.payload
+            const {id, type} = action.payload
+            state.data.contentActive.id= id
+            state.data.contentActive.type= type
         },
         setCutOrCopyContent: (state, action) => {
-            const {status, type, contentId, folderTarget} = action.payload
+            const {status, type, contentId, contentType} = action.payload
             state.data.contentCutOrCopy.status = status
             state.data.contentCutOrCopy.type = type
             state.data.contentCutOrCopy.contentId = contentId
-            state.data.contentCutOrCopy.folderTarget = folderTarget
+            state.data.contentCutOrCopy.contentType = contentType
         }
     }
 })

@@ -36,8 +36,12 @@ const ListContent = ({ onFolderDoubleClick }) => {
       return dataFolder.map((item) => (
         <tr
           key={item._id}
-          className={`select-none folder ${activeContent === item._id ? 'active' : 'hover:bg-blue-100'} ${contentOnCutOrCopy.contentId == item._id ? 'bg-zinc-100' : ''}`}
-          onClick={() => dispatch(setContentAcitve(item._id))}
+          className={`select-none folder ${activeContent.id === item._id ? 'active' : 'hover:bg-blue-100'} ${contentOnCutOrCopy.contentId == item._id ? 'bg-zinc-100' : ''}`}
+          onClick={() => {
+              const id = item._id
+              const type = 'folder'
+              dispatch(setContentAcitve({id, type}))
+            }}
           onDoubleClick={() => {
             if(contentOnCutOrCopy.contentId != item._id){
               onFolderDoubleClick(item)
@@ -87,22 +91,30 @@ const ListContent = ({ onFolderDoubleClick }) => {
           }
         };
         return (
-          <tr key={item._id} className="hover:bg-blue-200">
+          <tr 
+            key={item._id} 
+            className={`file ${activeContent.id === item._id ? 'active' : 'hover:bg-blue-200'} `}
+            onClick={() => {
+              const id = item._id
+              const type = 'file'
+              dispatch(setContentAcitve({id, type}))
+            }}
+          >
             <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-start px-2 py-1">
               <div className="w-full h-full flex items-center justify-start gap-2">
                 <IconFile />
-                <p className="font-normal text-xs text-slate-500">
+                <p className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'}`}>
                   {item.title}
                 </p>
               </div>
             </td>
-            <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-end px-2 py-1">
+            <td className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'} border-b border-slate-200 text-end px-2 py-1`}>
               {item.size} Kb
             </td>
-            <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-start px-2 py-1">
+            <td className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'} border-b border-slate-200 text-start px-2 py-1`}>
               File
             </td>
-            <td className="font-normal text-xs text-slate-500 border-b border-slate-200 text-end px-2 py-1">
+            <td className={`font-normal text-xs ${contentOnCutOrCopy.contentId == item._id ? 'text-slate-400' : 'text-slate-500'} border-b border-slate-200 text-end px-2 py-1`}>
               {item.createdAt}
             </td>
           </tr>

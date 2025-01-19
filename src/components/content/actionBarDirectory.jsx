@@ -164,7 +164,7 @@ const ActionBarDirectory = ({ onUpload, onCreateFolder, onPasteContent }) => {
             contentActive != null && (
               <ul className="border border-gray-200 divide-y divide-gray-200">
                 <li className="px-2 py-1.5 flex justify-start items-center gap-2 hover:cursor-pointer hover:bg-slate-100"
-                  onClick={() => dispatch(setCutOrCopyContent({status: true, type: 'cut', contentId: contentActive, folderTarget: null}))}
+                  onClick={() => dispatch(setCutOrCopyContent({status: true, type: 'cut',contentId: contentActive.id, contentType: contentActive.type}))}
                 >
                   <div className="w-5 flex justify-center">
                     <TfiCut className="text-xs text-slate-700" />

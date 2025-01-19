@@ -2,11 +2,13 @@ import { useState } from "react";
 import { MdFolder, MdArrowRight, MdArrowDropDown } from "react-icons/md";
 import "../../assets/css/sidebar.css";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setContentAcitve } from "../../redux/slices/folderSlice";
 
 
 const ListFolder = ({ onFolderClick }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const dispatch = useDispatch()
   const [listFolder, setListFolder] = useState([]);
   const [openedFolders, setOpenedFolders] = useState([]);
   const [activeFolder, setActiveFolder] = useState(null);
@@ -43,8 +45,12 @@ const ListFolder = ({ onFolderClick }) => {
           }`}
           onClick={() => {
             if(contentOnCutOrCopy.contentId != folder._id){
+              console.log(folder._id)
+              const id = folder._id
+              const type = 'folder'
               onFolderClick(folder);
-              setActiveFolder(folder._id);
+              setActiveFolder(id);
+              dispatch(setContentAcitve({id, type}))
             }
           }}
         >

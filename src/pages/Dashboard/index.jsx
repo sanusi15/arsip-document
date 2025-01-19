@@ -145,9 +145,14 @@ const Dashboard = () => {
   const pasteContent = async () => {
     try {
       const contentId = contentOnCutOrCopy.contentId
-      const newParentFolderId = contentActive
+      if(contentActive.id == null){
+        var newParentFolderId = openFolder._id
+      }else{
+        var newParentFolderId = contentActive.id
+      }
       setShowProgress(true);
-      const response = await axios.put(apiUrl+'folder/cutFolder/'+contentId, {newParentFolderId}, {
+      const urlFetch = contentOnCutOrCopy.contentType == 'folder' ? 'folder/cutFolder/' : 'file/cutFile/'
+      const response = await axios.put(apiUrl+urlFetch+contentId, {newParentFolderId}, {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
